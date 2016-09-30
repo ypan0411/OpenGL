@@ -12,7 +12,7 @@ target_link_libraries(teapot ${GLUT_LIBRARIES})
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
-target_link_libraries(teapot ${OpenGL_LIBRARIES})
+target_link_libraries(teapot ${OPENGL_LIBRARIES})
 
 find_package(GLU REQUIRED)
 include_directories(${GLU_INCLUDE_DIRS})
@@ -22,6 +22,3 @@ find_package(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})
 target_link_libraries(teapot ${GLEW_LIBRARIES})
 
-find_package(X11 REQUIRED)
-include_directories(${X11_INCLUED_DIRS})
-target_link_libraries( teapot ${X11_LIBRARIES} )
