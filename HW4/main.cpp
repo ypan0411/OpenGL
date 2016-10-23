@@ -1,10 +1,7 @@
 #include <fstream>
-#include <sstream>
-#include <iostream>
 #include "opencv/cxcore.h"
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
-#include <math.h>
 
 using namespace std;
 using namespace cv;
@@ -90,16 +87,16 @@ float solveQuadratic(const float &a, const float &b, const float &c)
 #ifdef DEBUG2
         cout << "solutions" << x0 << " " << x1 << endl;
 #endif
-        abs(x0) > abs(x1)? x = abs(x1) : x = abs(x0);
+        x0 > x1? x = x1 : x = x0;
     }
     return x;
 }
 
 //check if a ray intersect with a cycle, return the nearest t
-float intersection(const Ray &r, const Sphere &s, Point3f &p){
+float intersection(const Ray &r, const Sphere &s){
     float t = 0;
     float a = 1;
-    Point3f OC = s.center - VIEW_POINT;
+    Point3f OC = VIEW_POINT - s.center;
     float oc_square = OC.x*OC.x + OC.y*OC.y + OC.z*OC.z;
     float c = oc_square - s.radius*s.radius;
     float b = 2*(r.ray_direction.x*OC.x + r.ray_direction.y*OC.y + r.ray_direction.z*OC.z);
@@ -111,7 +108,9 @@ float intersection(const Ray &r, const Sphere &s, Point3f &p){
 #ifdef DEBUG2
     cout << "t in intersect function:" << t << endl;
 #endif
-    p = r.origin + t*r.ray_direction;
+//    if (t && t < origin_t){
+//        p = r.origin + t*r.ray_direction;
+//    }
     return t;
 }
 
@@ -160,11 +159,12 @@ int main(int argc, char** argv){
             int nearest = -1;
             Point3f inter_p;
             for(int k = 0; k < SPHERE_NUM; k++){
-                float inter = intersection(r, s[k], inter_p);
+                float inter = intersection(r, s[k]);
                 if(t > inter && inter > F_NEAR){
 #ifdef DEBUG2
                     cout << "t:" << t << " intersect:" << inter << endl;
 #endif
+                    inter_p = r.origin + inter*r.ray_direction;
                     t = inter;
                     nearest = k;
 #ifdef DEBUG2
@@ -172,36 +172,15 @@ int main(int argc, char** argv){
 #endif
                 }
             }
-#ifdef DEBUG
+#ifdef DEBUG2
             cout << p << nearest << endl;
 #endif
             if(nearest != -1){
-                int z = (int) inter_p.z;
-                unsigned char shader = (unsigned char)((10 - z)*25.5);
+                int s = (int)((10 - inter_p.z)*25.5);
+                unsigned char shader = (unsigned char) s;
                 Vec3b color = image.at<Vec3b>(p);
-                color[nearest] = shader;
+                color[2 - nearest] = shader;
                 image.at<Vec3b>(p) = color;
-//                if(nearest == 0){
-//#ifdef DEBUG
-//                    cout << "sphere 1" << endl;
-//#endif
-//                    Vec3b color = {255, 0, 0};
-//                    image.at<Vec3b>(p) = color;
-//                }
-//                else if(nearest == 1){
-//#ifdef DEBUG
-//                    cout << "sphere 2" << endl;
-//#endif
-//                    Vec3b color = {0, 255, 0};
-//                    image.at<Vec3b>(p) = color;
-//                }
-//                else if(nearest == 2){
-//#ifdef DEBUG
-//                    cout << "sphere 3" << endl;
-//#endif
-//                    Vec3b color = {0, 0, 255};
-//                    image.at<Vec3b>(p) = color;
-//                }
             }
 
         }
