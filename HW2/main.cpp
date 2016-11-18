@@ -24,11 +24,11 @@ void changeSize(int w, int h){
     float ratio = 1.0 * w / h;
 
     glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
+    glLoadIdentity();
 
     glViewport(0,0,w,h);
 
-    gluPerspective(90,ratio,1,100);
+    gluPerspective(45,ratio,1,100);
 }
 
 void change_coordinate(){
@@ -68,13 +68,13 @@ void processKeys(unsigned char key, int x, int y){
             change_duck_position();
             break;
         case 'l':
-            x_shift = 0.3f;
-            z_shift = 0.f;
+            r_shift = 0.3f;
+            f_shift = 0.f;
             change_duck_position();
             break;
         case 'i':
-            x_shift = -0.3f;
-            z_shift = 0.f;
+            f_shift = -0.3f;
+            r_shift = 0.f;
             change_duck_position();
             break;
         case 'k':
@@ -121,16 +121,6 @@ void display(){
     cout << x << " " << y << " " << z << endl;
     cout << x_shift << " " << z_shift << endl;
 #endif
-    //body
-    glLineWidth(1.5f);
-    glColor3f(0.0f, 0.0f, 0.0f);
-
-    glPushMatrix();
-    glTranslatef(4.0f, 0.0f, -4.0f);
-//    glRotatef(degree, 0.0f, 0.0f, 1.0f);
-    glScalef(2.0f, 1.0f, 1.5f);
-    glutSolidSphere(1.0, 100, 100);
-    glPopMatrix();
 
     gluLookAt(x, y, z, -x, -y, -z, 0.0, 1.0*cos(theta), 0.0);
     /*if(theta < 0.5*M_PI && theta >= 0.0){
@@ -173,7 +163,7 @@ void display(){
     glColor3f(1.0f, 1.0f, 0.0f);
 
     glPushMatrix();
-    glRotatef(degree, 0.0f, 0.0f, 1.0f);
+//    glRotatef(degree, 0.0f, 0.0f, 1.0f);
     glTranslatef(2.0f+x_shift, 0.3f, 0.0f+z_shift);
     glScalef(0.5f, 0.5f, 0.5f);
     glutSolidSphere(1.0, 100, 100);
@@ -184,7 +174,7 @@ void display(){
     glColor3f(1.0f, 0.0f, 0.0f);
 
     glPushMatrix();
-    glRotatef(degree, 0.0f, 0.0f, 1.0f);
+//    glRotatef(degree, 0.0f, 0.0f, 1.0f);
     glTranslatef(-2.7f+x_shift, 1.0f, 0.0f+z_shift);
     glRotated(-90, 0, 1, 0);
     glScalef(1.0f, 1.0f, 1.0f);
